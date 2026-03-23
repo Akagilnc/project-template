@@ -1,43 +1,43 @@
 # AGENTS.md
 
-Follow `CLAUDE.md` for the shared repository rules.
+遵循 `CLAUDE.md` 中的共享仓库规则。
 
-## Scope
-This file defines Codex-specific behavior and a small set of high-priority guardrails.
-For all shared workflow, implementation, testing, and repository rules, follow `CLAUDE.md`.
+## 适用范围
+本文件定义 Codex 特有的行为和少量高优先级兜底规则。
+所有共享的工作流、实现、测试和仓库规则，遵循 `CLAUDE.md`。
 
-## Role principle
-- The role is defined by the current task, not by the agent name.
-- The current task may be implementation, debugging, refactoring, testing, or review.
-- Do not assume that Codex is always limited to review.
-- Do not assume that any agent is always responsible for implementation.
+## 角色原则
+- 角色由当前任务决定，而不是由工具名称决定。
+- 当前任务可能是实现、调试、重构、测试或 review。
+- 不要假设 Codex 只能做 review。
+- 不要假设任何 agent 固定负责实现。
 
-## High-priority rules
-- Communicate with me in Chinese.
-- Read relevant code, tests, config, and context first.
-- Propose a concise plan before making changes.
-- Do not modify repository contents before approval.
-- For behavior changes, use TDD by default and show real test output.
-- Prefer minimal, local changes.
-- Do not refactor unrelated code.
-- Do not invent facts, test results, issue status, milestone status, or review conclusions.
+## 高优先级规则
+- 与我沟通使用中文。
+- 先阅读相关代码、测试、配置和上下文。
+- 修改前先给出简洁方案。
+- 未经确认前不要修改仓库内容。
+- 行为变更默认走 TDD，展示真实测试输出。
+- 优先最小、局部改动。
+- 不要重构无关代码。
+- 不要编造事实、测试结果、issue 状态、milestone 状态或 review 结论。
 
-## Review behavior
-When the current task is review:
-- Focus on correctness, regression risk, edge cases, test coverage, maintainability, and scope control.
-- Point out concrete problems and explain why they matter.
-- Prefer actionable review comments over abstract criticism.
-- Unless explicitly asked, do not take over implementation directly during review.
+## Review 行为
+当当前任务是 review 时：
+- 重点关注正确性、回归风险、边界条件、测试覆盖、可维护性和范围控制。
+- 指出具体问题并解释为什么重要。
+- 给出可操作的 review 意见，而不是抽象批评。
+- 除非明确要求，否则不要在 review 中直接接管实现。
 
-## Implementation behavior
-When the current task is implementation:
-- Follow `CLAUDE.md` as the primary rule set.
-- Keep changes minimal and verifiable.
-- Update relevant tests, types, and docs when behavior changes.
+## 实现行为
+当当前任务是实现时：
+- 以 `CLAUDE.md` 作为主要规则集。
+- 保持改动最小且可验证。
+- 行为变更时同步更新相关测试、类型和文档。
 
-## Conflict handling
-If `AGENTS.md` and `CLAUDE.md` conflict, use:
-1. My current explicit instruction
+## 冲突处理
+如果 `AGENTS.md` 和 `CLAUDE.md` 冲突，按以下优先级：
+1. 我在当前对话中的明确指令
 2. `AGENTS.md`
 3. `CLAUDE.md`
 4. `docs/process.md`
