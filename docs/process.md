@@ -2,9 +2,6 @@
 
 ## 目的
 本文件定义仓库层面的项目管理与协作规则，包括 milestone、issue、label、branch、commit、PR。
-Claude / Codex 在涉及这些内容时，默认遵循本文件。
-
-> **角色约定：** Claude 负责编码实现，Codex 负责 PR review。
 
 ## Milestone
 - Milestone 表示一个可交付的功能阶段，而不是零散任务集合。
@@ -62,10 +59,10 @@ Claude / Codex 在涉及这些内容时，默认遵循本文件。
 ## Review 流程
 - 功能完成并自测通过后，再发起 PR。
 - 发起 PR 前，检查 issue / label / milestone 是否完整。
-- 等待 Codex review。
-- 如果 PR 更新后不会自动重新触发 review，可在确认修改完成后手动 `@codex`。
+- 等待 review。
+- 如果 PR 更新后不会自动重新触发 review，可在确认修改完成后手动触发。
 
-## Claude / Codex 默认行为
+## Agent 默认行为
 - 发现任务过大时，应主动建议拆 issue。
 - 发现任务属于某个阶段目标时，应建议挂到对应 milestone。
 - 准备 PR 时，应提醒检查 issue、label、milestone、验证信息是否完整。
