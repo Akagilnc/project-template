@@ -13,6 +13,7 @@ Describe the exact validation steps.
 - [ ] Tests added or updated where needed
 - [ ] Verified locally
 - [ ] Relevant docs / types updated where needed
+- [ ] If this PR changes the posting pipeline, scheduling, Worker dispatch, or platform integrations: E2E verification result included above
 
 ## Risks / Compatibility impact
 Describe regression risk, compatibility impact, or notable edge cases.
