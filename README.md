@@ -9,12 +9,14 @@ It provides:
 - shared repository rules via `CLAUDE.md`
 - Codex-specific entry rules via `AGENTS.md`
 - workflow and project management rules via `docs/process.md`
+- durable shared lessons via `docs/memory/MEMORY.md`
 - issue and PR templates for consistent collaboration
 
 ## Repository rules
 - Shared execution rules: `CLAUDE.md`
 - Codex-specific behavior: `AGENTS.md`
 - Issue / milestone / PR workflow: `docs/process.md`
+- Shared memory and lessons learned: `docs/memory/MEMORY.md`
 
 ## Project context
 Fill in the business and scope information in:
@@ -36,9 +38,10 @@ After creating a new repository from this template:
 3. Review `CLAUDE.md`
 4. Review `AGENTS.md`
 5. Review `docs/process.md`
-6. Adjust issue / PR templates if needed
-7. Add project-specific stack files
-8. Remove placeholder text that no longer applies
+6. Review `docs/memory/MEMORY.md`
+7. Adjust issue / PR templates if needed
+8. Add project-specific stack files
+9. Remove placeholder text that no longer applies
 
 ## Development workflow
 1. Create or confirm an issue
@@ -54,3 +57,4 @@ After creating a new repository from this template:
 ## Notes
 - This template is workflow-oriented, not stack-oriented.
 - Add project-specific runtime, framework, CI, and deployment files separately.
+- Keep cross-project lessons in `docs/memory/feedback_*.md`; keep repo-specific retrospectives in `docs/memory/project_*.md`.
