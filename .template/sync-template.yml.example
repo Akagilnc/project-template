@@ -20,11 +20,18 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    env:
+      TEMPLATE_REPO_PAT: ${{ secrets.TEMPLATE_REPO_PAT }}
     steps:
       - name: Checkout source repo
         uses: actions/checkout@v4
 
+      - name: Skip when template sync secret is unavailable
+        if: ${{ env.TEMPLATE_REPO_PAT == '' }}
+        run: echo "TEMPLATE_REPO_PAT is not configured; skipping template sync."
+
       - name: Checkout template repo
+        if: ${{ env.TEMPLATE_REPO_PAT != '' }}
         uses: actions/checkout@v4
         with:
           repository: Akagilnc/template-workflow-base
@@ -32,6 +39,7 @@ jobs:
           path: template-repo
 
       - name: Copy shared files
+        if: ${{ env.TEMPLATE_REPO_PAT != '' }}
         run: |
           cp CLAUDE.md template-repo/CLAUDE.md
           cp AGENTS.md template-repo/AGENTS.md
@@ -56,6 +64,7 @@ jobs:
           done
 
       - name: Push if changed
+        if: ${{ env.TEMPLATE_REPO_PAT != '' }}
         run: |
           cd template-repo
           git config user.name "github-actions[bot]"
