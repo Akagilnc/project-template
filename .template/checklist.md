@@ -16,6 +16,8 @@ After creating a new repository from this template, review the following:
 - [ ] Decide whether blank issues should be enabled
 - [ ] Define initial labels
 - [ ] Define initial milestone strategy
+- [ ] Review `docs/memory/MEMORY.md` and decide which lessons are shared vs project-local
+- [ ] If this repo should sync shared files back to the template, copy and customize `.template/sync-template.yml.example`
 
 ## Branch / repository settings
 - [ ] Confirm default branch name
