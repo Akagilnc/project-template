@@ -66,6 +66,13 @@
 - 等待 review。
 - 如果 PR 更新后不会自动重新触发 review，可在确认修改完成后手动触发。
 
+### 手动重新触发 Review
+- `Gemini`：在 PR 顶层评论发送 `/gemini review`。
+- `Codex`：在 PR 顶层评论发送 `@codex review`。
+- `GitHub Copilot`：
+  - 推送新 commit：如果当前账号 / 仓库 / 组织的 Copilot review 配置开启了“新 commit 自动重新请求 review”，直接向 PR 分支 push 新提交即可。
+  - 评论召唤：可在 PR 顶层评论尝试 `@copilot review`。
+
 ## Agent 默认行为
 - 发现任务过大时，应主动建议拆 issue。
 - 发现任务属于某个阶段目标时，应建议挂到对应 milestone。
