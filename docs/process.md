@@ -73,6 +73,21 @@
   - 推送新 commit：如果当前账号 / 仓库 / 组织的 Copilot review 配置开启了“新 commit 自动重新请求 review”，直接向 PR 分支 push 新提交即可。
   - 评论召唤：可在 PR 顶层评论尝试 `@copilot review`。
 
+## Live Smoke 验证规则
+- 对于依赖真实浏览器、登录态、第三方平台、外部 API 或 LLM 实时输出的链路，能做 live smoke 就必须做 live smoke。
+- 上述链路如果还没有完成 live smoke，只能说明"代码路径已实现"或"局部 smoke 已通过"，不得宣称"主线已完成""真实链路已打通"或"可以放心进入定时运行"。
+- live smoke 结果必须明确标注验证语境，例如：
+  - `logged_out public-feed smoke`
+  - `logged_in account-context smoke`
+  - `real browser save-draft smoke`
+- 不允许用游客态验证结果冒充账号态验证结果，也不允许用 fixture / mock / partial smoke 冒充真实链路验证。
+
+## Git Hooks
+- 仓库包含 `.githooks/pre-push`，禁止直接 push 到 main / master。
+- `package.json` 的 `postinstall` 会自动执行 `git config core.hooksPath .githooks`，clone 后 `bun install` 即生效。
+- 如果 hook 未生效，手动执行 `git config core.hooksPath .githooks`。
+- 此 hook 不影响 GitHub PR merge（服务端操作不经过本地 hook）。
+
 ## Agent 默认行为
 - 发现任务过大时，应主动建议拆 issue。
 - 发现任务属于某个阶段目标时，应建议挂到对应 milestone。

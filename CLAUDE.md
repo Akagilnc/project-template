@@ -159,3 +159,60 @@ Git 具体规则（Branch、Commit、PR、Review）遵循 `docs/process.md`。
 
 如果你判断我的要求存在明显风险、错误或更差实现，直接指出，不要迎合。
 
+## 环境诊断规则
+- 安装任何工具前，先用 `which <tool>` 和常见路径（`/opt/homebrew/bin/`、`/usr/local/bin/`）检查是否已安装。
+- 如果工具已安装但 Claude 找不到，优先排查 PATH 问题，不要直接重装。
+- 遇到环境问题时，先诊断再行动；不确定时列出 2-3 个备选方案让用户选择，而不是一条路走到黑。
+
+## 自治 TDD 循环
+当用户明确授权自治 TDD 时，可进入以下循环，不需要每轮确认：
+1. 写好所有测试用例
+2. 运行测试，确认失败
+3. 实现代码
+4. 运行测试，如有失败则读取失败输出、修改代码、重跑，循环直到全绿
+5. 全绿后停下来报告结果
+
+进入条件：用户明确说"自治 TDD"或等价表达。未授权时仍按默认 TDD 流程走。
+
+## 长期状态文档
+- `docs/current-state.md` 是长期存在的项目现状文档，不是一次性 handoff 便签。
+- 该文件应只保留"当前真实状态"，不要堆历史聊天过程。
+- 至少应覆盖：
+  - 当前主流程 / 当前 MVP 语义
+  - 进行中的 branch / PR / review 状态
+  - 最近一次真实验证结果
+  - 当前 blocker / 风险
+  - 下一步建议
+- 当以下信息发生实质变化时，应同步更新 `docs/current-state.md`：
+  - 主流程或目录结构变化
+  - PR / branch 状态变化
+  - issue / milestone 计划重排
+  - 真实 API / 端到端验证结果更新
+  - blocker 被确认、解除或替换
+- 更新时保持简洁、事实化、可接力，不要写成长篇日报。
+
+## 经验复盘文档
+- 阶段性的经验、教训、复盘不要写进 `docs/current-state.md`。
+- 这类内容统一放在 `docs/retrospectives/`。
+- `current-state` 负责"现在是什么状态"，`retrospectives` 负责"我们从过去学到了什么"。
+
+## Skill routing
+
+When the user's request matches an available skill, ALWAYS invoke it using the Skill
+tool as your FIRST action. Do NOT answer directly, do NOT use other tools first.
+The skill has specialized workflows that produce better results than ad-hoc answers.
+
+Key routing rules:
+- Product ideas, "is this worth building", brainstorming → invoke gstack-office-hours
+- Bugs, errors, "why is this broken", 500 errors → invoke gstack-investigate
+- Ship, deploy, push, create PR → invoke gstack-ship
+- QA, test the site, find bugs → invoke gstack-qa
+- Code review, check my diff → invoke gstack-review
+- Update docs after shipping → invoke gstack-document-release
+- Weekly retro → invoke gstack-retro
+- Design system, brand → invoke gstack-design-consultation
+- Visual audit, design polish → invoke gstack-design-review
+- Architecture review → invoke gstack-plan-eng-review
+- Save progress, checkpoint, resume → invoke gstack-checkpoint
+- Code quality, health check → invoke gstack-health
+
