@@ -169,15 +169,37 @@ Git 具体规则（Branch、Commit、PR、Review）遵循 `docs/process.md`。
 - 如果工具已安装但 Claude 找不到，优先排查 PATH 问题，不要直接重装。
 - 遇到环境问题时，先诊断再行动；不确定时列出 2-3 个备选方案让用户选择，而不是一条路走到黑。
 
-## 自治 TDD 循环
-当用户明确授权自治 TDD 时，可进入以下循环，不需要每轮确认：
-1. 写好所有测试用例
-2. 运行测试，确认失败
-3. 实现代码
-4. 运行测试，如有失败则读取失败输出、修改代码、重跑，循环直到全绿
-5. 全绿后停下来报告结果
+## 自治 TDD 开发 Loop
 
-进入条件：用户明确说"自治 TDD"或等价表达。未授权时仍按默认 TDD 流程走。
+完整流程见 `~/WorkSpace/vault/ak-cc-wiki/wiki/concepts/tdd-autonomous-dev.md`。
+
+当用户明确授权"自治 TDD"或等价表达时，按以下流程执行，不需要每轮确认：
+
+**前置条件**：Plan view 各角色批准（CEO / Eng / Design / DX）
+
+**切片**（只做一次）：把 plan 产出分成独立、中小粒度的提交单元。
+
+**Per 切片 n**（重复直到所有切片完成）：
+
+1. **TDD Loop**
+   - 红：写 failing test
+   - 绿：最小实现
+   - 重构
+   - 分支覆盖率检查 → 未过 → 补测试，回绿
+
+2. **自查**（窄范围）：有无类似 pattern 的 bug / 修复有无引入新 bug
+
+3. **Cross-model review**（完整闭环，含修复迭代）：
+   - 并行启动 3 × Claude subagent（分章节）+ 1 × Codex（全文）
+   - 有 P0/P1 → 修复 → 自查 → 下一轮
+   - 终止：4/4 reviewer approve，或 bug 数量无法收敛（停 + 从实现 / 架构层面改进）
+
+**所有切片完成后**：
+- `gstack-ship`（全量回归 + Layer 2 review）
+- PR 创建后走 `pr-review-loop`（3 轮上限，Layer 3）
+- 停在 merge 前一刻（merge = 人工操作）
+
+进入条件：用户明确说"自治 TDD"或等价表达。未授权时仍按 `## TDD / 验证规则` 走。
 
 ## 长期状态文档
 - `docs/current-state.md` 是长期存在的项目现状文档，不是一次性 handoff 便签。
@@ -218,7 +240,7 @@ Key routing rules:
 - Design system, brand → invoke gstack-design-consultation
 - Visual audit, design polish → invoke gstack-design-review
 - Architecture review → invoke gstack-plan-eng-review
-- Save progress, checkpoint, resume → invoke gstack-checkpoint
+- Save progress, checkpoint, resume → invoke gstack-context-save
 - Code quality, health check → invoke gstack-health
 
 <!-- TEMPLATE_END — 项目特有 sections 写在下面，sync script 不会覆盖下方内容 -->
