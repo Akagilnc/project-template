@@ -173,31 +173,39 @@ Git 具体规则（Branch、Commit、PR、Review）遵循 `docs/process.md`。
 
 完整流程见 `~/WorkSpace/vault/ak-cc-wiki/wiki/concepts/tdd-autonomous-dev.md`。
 
-当用户明确授权"自治 TDD"或等价表达时，按以下流程执行，不需要每轮确认：
+当用户明确授权"自治 TDD"或等价表达时，按以下流程执行，**切片之间不停顿、不询问、不报告中间进度**。
 
 **前置条件**：Plan view 各角色批准（CEO / Eng / Design / DX）
 
-**切片**（只做一次）：把 plan 产出分成独立、中小粒度的提交单元。
+**切片**（只做一次）：把 plan 产出分成独立、中小粒度的提交单元。**默认整队列装 1 个 PR**，commit 维度分离 review 量；只有 diff > 2000 行 / 破坏性 schema migration / 用户要求 / drift 命中时才拆 PR。
 
-**Per 切片 n**（重复直到所有切片完成）：
+**Per 切片 sN**（重复直到所有切片完成）：
 
-1. **TDD Loop**
-   - 红：写 failing test
-   - 绿：最小实现
-   - 重构
-   - 分支覆盖率检查 → 未过 → 补测试，回绿
-
-2. **自查**（窄范围）：有无类似 pattern 的 bug / 修复有无引入新 bug
-
-3. **Cross-model review**（完整闭环，含修复迭代）：
-   - 并行启动 3 × Claude subagent（分章节）+ 1 × Codex（全文）
-   - 有 P0/P1 → 修复 → 自查 → 下一轮
-   - 终止：4/4 reviewer approve，或 bug 数量无法收敛（停 + 从实现 / 架构层面改进）
+1. **TDD Loop**：红（写 failing test）→ 绿（最小实现）→ 重构 → 分支覆盖率检查 → 未过补测试回绿
+2. **自查**（窄）：类似 pattern bug / 修复引入新 bug
+3. **Commit**（切片 baseline）
+4. **Cross-model review**（含修复闭环）：
+   - **N+1 并行启动**（**单条 message 内**同时发 N 个 Agent + 1 个 Bash codex exec）
+     - N=1（< 200 行）/ N=2（200–500 行）/ N=3（500+ 行，empirically validated）
+     - 外部声音降级链：`codex exec` → `gemini --approval-mode auto_edit` → Claude subagent（兜底，要 flag「缺 outside voice」）
+     - 调用规范见 `~/WorkSpace/vault/ak-cc-wiki/wiki/concepts/codex-bot-conventions.md`
+   - 收 findings → P0/P1 必修，P2/P3/P4 按 defer 协议（**显式分级 + 具体理由 + TODO 写入 PR `## Deferred Findings`**，不能"P1 私自降为 P2"）→ 自查 → commit → 下一轮
+   - **跨切片 finding**（sN 发现 sM<N 的问题）：默认 fix-in-current（在 sN commit 里直接改 sM），不回滚 sM；架构级重做 → 强停 reground
+   - 终止：(N+1)/(N+1) approve / bug 无法收敛（架构改进）/ drift 三联命中
 
 **所有切片完成后**：
-- `gstack-ship`（全量回归 + Layer 2 review）
-- PR 创建后走 `pr-review-loop`（3 轮上限，Layer 3）
-- 停在 merge 前一刻（merge = 人工操作）
+- `gstack-ship`（含内部 1+1 评审；**多次 ship 是正常的**，失败直接重跑，不切策略；同类 finding 重复 ≥ 3 次升级为 ship 阶段 drift）
+- PR 创建后自动进 `pr-review-loop`（3 轮上限，Layer 3）
+
+**停止点**：pr-review-loop 收敛后停下报告，等用户 E2E / smoke 测试 → 用户 merge。
+
+**自治不停顿例外**（必须停下报告的情况）：
+- (a) pr-review-loop 收敛，等 E2E
+- (b) Drift 三联命中（强停 reground）
+- (c) 4/4 始终无法收敛 / ship 同类 finding 重复 ≥ 3 次（架构建议）
+- (d) 重大决策事件：实现与 plan 实质不符 / 引新依赖 / 接口契约变更 / 数据 migration / 安全鉴权改动
+
+「我刚做完 s3 准备做 s4」「这一轮 review 完毕开始 fix」不是有效报告，吞掉。
 
 进入条件：用户明确说"自治 TDD"或等价表达。未授权时仍按 `## TDD / 验证规则` 走。
 
